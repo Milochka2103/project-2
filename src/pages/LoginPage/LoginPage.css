@@ -1,0 +1,26 @@
+.loginform {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.loginform h1 {
+  color: rgb(15, 69, 7);
+  font-size: 50px;
+  margin-top: 30px;
+}
+
+.loginform div {
+  margin-top: 10px;
+}
+
+.loginform input, .loginform button{
+  border: 1px solid rgb(15, 69, 7);
+  border-radius: 8px;
+  width: 80%;
+  padding: 3px 5px;
+}
+
+.loginform button {
+  background-color: rgb(119, 231, 54);
+  
+}
