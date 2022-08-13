@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import { Predictions } from "../../Predictions/Predictions";
 
-export const Header = (setIsLoggedIn) => {
+export const Header = ({ setIsLoggedIn }) => {
   
-  const logOut = () => setIsLoggedIn(false);
+  const [isShowPredictions, setIsShowPredictions] = useState(false);
+
+  const showPredictions = () => {
+    setIsShowPredictions(true)
+  }
+  
+  const logOut = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
+  }
 
   return (
+  <>
     <div>
       <Navbar bg="light" expand="lg">
         <Container className="navbar-h">
@@ -16,7 +27,7 @@ export const Header = (setIsLoggedIn) => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#home">Prediction</Nav.Link>
+              <button onClick={showPredictions}>Predictions</button>
               <Nav.Link href="#home">Favorite</Nav.Link>
               <button onClick={logOut}>Log out</button>
             </Nav>
@@ -24,5 +35,10 @@ export const Header = (setIsLoggedIn) => {
         </Container>
       </Navbar>
     </div>
+
+    <div>
+      {isShowPredictions && <Predictions />}
+    </div>
+  </>
   );
 };

@@ -3,3 +3,10 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.showAddFormBtn {
+  margin-top: 10px;
+  background-color: rgb(66, 222, 74);
+  border-radius: 8px;
+  height: 30px;
+}
