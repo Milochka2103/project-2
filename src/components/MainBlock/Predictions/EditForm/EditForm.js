@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import CloseIcon from "@mui/icons-material/Close";
 import './EditForm.css';
-import { setPredictToLocalStorage } from '../../../utils/helpers';
+import { PREDICTIONS_URL } from '../../../../utils/constants';
+
 
 export const EditForm = ({
   setShowEditForm,
@@ -37,15 +38,25 @@ export const EditForm = ({
       description: predictionDesc,
     }
 
-    const updatedPredictions = predictions.map((prediction) => {
-      if (prediction.id === updatedPrediction.id) return updatedPrediction
-      return prediction
+    fetch(PREDICTIONS_URL + selectedPrediction.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }, 
+      body: JSON.stringify(updatedPrediction)
     })
-
-    setPredictions(updatedPredictions);
-    setPredictToLocalStorage(updatedPredictions)
-
-    setShowEditForm(false);
+      .then(res => res.json())
+      .then(updatedPredictionFromServer => {
+        
+        const updatedPredictions = predictions.map((prediction) => {
+          if (prediction.id === updatedPredictionFromServer.id)
+            return updatedPredictionFromServer;
+          return prediction;
+        })
+        setPredictions(updatedPredictions);
+        setShowEditForm(false);
+      })
+      .catch((err) => console.log(err))
   };
 
   return (

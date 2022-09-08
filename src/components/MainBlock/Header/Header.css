@@ -1,0 +1,12 @@
+.navbar {
+  --bs-navbar-color: rgb(20, 176, 28);
+}
+
+.navbar-brand {
+  color: rgb(20, 176, 28);
+  font-weight: 700;
+}
+
+.nav-link {
+  font-weight: 600;
+}

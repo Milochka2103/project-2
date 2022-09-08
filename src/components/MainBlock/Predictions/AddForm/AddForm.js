@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./AddForm.css";
-import { setPredictToLocalStorage } from "../../../utils/helpers";
+import { PREDICTIONS_URL } from "../../../../utils/constants";
 
 export const AddForm = ({ setShowAddForm, predictions, setPredictions }) => {
   const [predictionTitle, setPredictionTitle] = useState("");
@@ -23,19 +23,24 @@ export const AddForm = ({ setShowAddForm, predictions, setPredictions }) => {
     e.preventDefault();
 
     const newPrediction = {
-      id: predictions.length + 1,
       title: predictionTitle,
       description: predictionDesc,
       liked: false,
     }
 
-    const updatedPredictions = [...predictions, newPrediction]
-
-    setPredictions(updatedPredictions);
-
-    setPredictToLocalStorage(updatedPredictions);
-
-    setShowAddForm(false);
+    fetch(PREDICTIONS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newPrediction)
+    })
+      .then(res => res.json())
+      .then(newPredictionFromServer => {
+        setPredictions([...predictions, newPredictionFromServer])
+        setShowAddForm(false)
+      })
+      .catch(err => console.log(err))
   };
 
   return (

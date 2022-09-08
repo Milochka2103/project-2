@@ -30,3 +30,13 @@ export const PREDICTIONS = [
     liked: false,
   },
 ];
+
+
+export const PREDICTIONS_URL =
+  "https://625bd1c050128c570207cce6.mockapi.io/predictions/";
+
+export const APP_ROUTES = [
+  '/predictions',
+  '/favorite',
+  '/login'
+]

@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useHistory } from "react-router-dom";
 import './LoginPage.css';
 
 export const LoginPage = ({ setIsLoggedIn }) => {
@@ -6,16 +7,14 @@ export const LoginPage = ({ setIsLoggedIn }) => {
   const loginRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = () => {
-    const userData = {
-      login: loginRef.current.value,
-      password: passwordRef.current.value,
-    };
+  const history = useHistory();
 
-    console.log(userData)
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     localStorage.setItem('isLoggedIn', true)
     setIsLoggedIn(true);
+    history.push('/')
   }
   
 
