@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./AddForm.css";
-import { PREDICTIONS_URL } from "../../../../utils/constants";
+import { useDispatch } from "react-redux";
+import { addNewPrediction } from "../../../../store/slices/predictions";
 
 export const AddForm = ({ setShowAddForm, predictions, setPredictions }) => {
   const [predictionTitle, setPredictionTitle] = useState("");
@@ -19,7 +20,9 @@ export const AddForm = ({ setShowAddForm, predictions, setPredictions }) => {
     setShowAddForm(false);
   };
 
-  const createPrediction = (e) => {
+  const dispatch = useDispatch()
+
+  const handleCreatePrediction = (e) => {
     e.preventDefault();
 
     const newPrediction = {
@@ -28,24 +31,12 @@ export const AddForm = ({ setShowAddForm, predictions, setPredictions }) => {
       liked: false,
     }
 
-    fetch(PREDICTIONS_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newPrediction)
-    })
-      .then(res => res.json())
-      .then(newPredictionFromServer => {
-        setPredictions([...predictions, newPredictionFromServer])
-        setShowAddForm(false)
-      })
-      .catch(err => console.log(err))
+    dispatch(addNewPrediction(newPrediction)).finally(() => handleFormHide(false));
   };
 
   return (
     <>
-      <form className="addForm" onSubmit={createPrediction}>
+      <form className="addForm" onSubmit={handleCreatePrediction}>
         <button className="hideBtn" onClick={handleFormHide}>
           <CloseIcon />
         </button>

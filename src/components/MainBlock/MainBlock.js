@@ -1,19 +1,16 @@
 import React from "react";
 import { Switch } from "react-router-dom";
 import { Route } from "react-router-dom";
-import { NoMatch } from "../../pages/LoginPage/NoMatch";
-import { PREDICTIONS_URL } from "../../utils/constants";
-import { useFetchPredictions } from "../../utils/hooks";
-import { Predictions } from "./Predictions/Predictions";
 import { Header } from "./Header/Header";
 import { Redirect } from "react-router-dom";
+import { Predictions } from "./Predictions/Predictions";
 
-export const MainBlock = ({ setIsLoggedIn }) => {
-  const predictionsData = useFetchPredictions(PREDICTIONS_URL);
+export const MainBlock = ({ predictionsData }) => {
+  
 
   return (
     <>
-      <Header setIsLoggedIn={setIsLoggedIn} />
+      <Header />
       <main>
         <Switch>
           <Route path="/predictions">
@@ -24,11 +21,7 @@ export const MainBlock = ({ setIsLoggedIn }) => {
           </Route>
 
           <Route exact path="/">
-              <Redirect to="/predictions" />
-          </Route>
-
-          <Route path="*">
-            <NoMatch />
+            <Redirect to="/predictions" />
           </Route>
         </Switch>
       </main>

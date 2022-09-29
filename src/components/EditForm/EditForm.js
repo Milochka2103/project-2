@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import CloseIcon from "@mui/icons-material/Close";
 import './EditForm.css';
-import { PREDICTIONS_URL } from '../../../../utils/constants';
+import { useDispatch } from 'react-redux';
+import { editPrediction } from '../../store/slices/predictions';
 
 
 export const EditForm = ({
@@ -29,7 +30,9 @@ export const EditForm = ({
     setShowEditForm(false);
   };
 
-  const editPrediction = (e) => {
+  const dispatch = useDispatch()
+
+  const handleEditPrediction = (e) => {
     e.preventDefault();
 
     const updatedPrediction = {
@@ -38,30 +41,13 @@ export const EditForm = ({
       description: predictionDesc,
     }
 
-    fetch(PREDICTIONS_URL + selectedPrediction.id, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      }, 
-      body: JSON.stringify(updatedPrediction)
-    })
-      .then(res => res.json())
-      .then(updatedPredictionFromServer => {
-        
-        const updatedPredictions = predictions.map((prediction) => {
-          if (prediction.id === updatedPredictionFromServer.id)
-            return updatedPredictionFromServer;
-          return prediction;
-        })
-        setPredictions(updatedPredictions);
-        setShowEditForm(false);
-      })
-      .catch((err) => console.log(err))
+    dispatch(editPrediction(updatedPrediction))
+      .finally(() => handleFormHide(false))
   };
 
   return (
     <>
-      <form className="editForm" onSubmit={editPrediction}>
+      <form className="editForm" onSubmit={handleEditPrediction}>
         <button className="hideBtn" onClick={handleFormHide}>
           <CloseIcon />
         </button>

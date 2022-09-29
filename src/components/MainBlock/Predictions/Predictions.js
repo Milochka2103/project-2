@@ -1,53 +1,29 @@
-import React, { useState } from "react";
-import { PREDICTIONS_URL } from "../../../utils/constants";
+import React, { useEffect, useState } from "react";
 import { AddForm } from "./AddForm/AddForm";
-import { EditForm } from "./EditForm/EditForm";
+import { EditForm } from "../../EditForm/EditForm";
 import { Prediction } from "./Prediction/Prediction";
 import "./Predictions.css";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePrediction, editPrediction, fetchPredictions, selectPredictionsData, setPredictions } from "../../../store/slices/predictions";
 
-export const Predictions = ({
-  predictions,
-  setPredictions,
-  isLoading,
-  error,
-  isLikedPredictions = false
-}) => {
+export const Predictions = ({ isLikedPredictions = false }) => {
+  const { list: predictions, error, isLoading } = useSelector(selectPredictionsData);
+  const dispatch = useDispatch()
 
-  const likedPredictions = predictions.filter(
-    (prediction) => prediction.liked
-  );
+  useEffect(() => {
+    dispatch(fetchPredictions());
+  }, [dispatch]);
 
-  const like = (pos) => {
+  /* const likedPredictions = predictions.filter((prediction) => prediction.liked); */
+
+  const handleLikePrediction = (index) => {
     const updatedPredictions = [...predictions];
-    updatedPredictions[pos].liked = !updatedPredictions[pos].liked;
-
-    fetch(PREDICTIONS_URL + updatedPredictions[pos].id, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedPredictions[pos]),
-    })
-      .then((res) => res.json())
-      .then((updatedPredictionFromServer) => {
-        updatedPredictions[pos] = updatedPredictionFromServer;
-        setPredictions(updatedPredictions);
-      })
-      .catch((err) => console.log(err));
+    updatedPredictions[index] = {...updatedPredictions[index],liked: !updatedPredictions[index].liked}
+    dispatch(editPrediction(updatedPredictions[index]));
   };
 
-  const deletePrediction = (predictionId) => {
-    const isDelete = window.confirm("Delete prediction?");
-
-    if (isDelete) {
-      fetch(PREDICTIONS_URL + predictionId, { method: "DELETE" })
-        .then(() =>
-          setPredictions(
-            predictions.filter((prediction) => prediction.id !== predictionId)
-          )
-        )
-        .catch((err) => console.log(err));
-    }
+  const handleDeletePrediction = (predictionId) => {
+    dispatch(deletePrediction(predictionId));
   };
 
   const [selectedPrediction, setSelectedPrediction] = useState({});
@@ -57,7 +33,7 @@ export const Predictions = ({
     setSelectedPrediction(prediction);
     setShowEditForm(true);
   };
-  
+
   const [showAddForm, setShowAddForm] = useState(false);
 
   const handleShowAddForm = () => {
@@ -73,8 +49,8 @@ export const Predictions = ({
       <div>
         {!isLikedPredictions && (
           <button onClick={handleShowAddForm} className="showAddFormBtn">
-          Create a new prediction
-        </button>
+            Create a new prediction
+          </button>
         )}
 
         {showAddForm && (
@@ -86,21 +62,19 @@ export const Predictions = ({
         )}
       </div>
       <section className="predictions">
-        {(isLikedPredictions ? likedPredictions : predictions).map(
-          (prediction, pos) => {
-            return (
-              <Prediction
-                title={prediction.title}
-                description={prediction.description}
-                liked={prediction.liked}
-                deletePrediction={() => deletePrediction(prediction.id)}
-                like={() => like(pos)}
-                selectPrediction={() => selectPrediction(prediction)}
-                key={prediction.id}
-              />
-            );
-          }
-        )}
+        {predictions.map((prediction, pos) => {
+          return (
+            <Prediction
+              title={prediction.title}
+              description={prediction.description}
+              liked={prediction.liked}
+              deletePrediction={() => handleDeletePrediction(prediction.id)}
+              like={() => handleLikePrediction(pos)}
+              selectPrediction={() => selectPrediction(prediction)}
+              key={prediction.id}
+            />
+          );
+        })}
       </section>
 
       {showEditForm && (

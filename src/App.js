@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Switch } from "react-router-dom";
 import "./App.css";
 import { MainBlock } from "./components/MainBlock/MainBlock";
@@ -7,19 +6,18 @@ import { PublicRoute } from "./components/PublicRoute/PublicRoute";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
+  
+  /* const predictionsData = useFetchPredictions(PREDICTIONS_URL); */
 
   return (
     <div className="App">
       <Switch>
-        <PublicRoute exact path="/login" isLoggedIn={isLoggedIn}>
-          <LoginPage setIsLoggedIn={setIsLoggedIn} />;
+        <PublicRoute exact path="/login">
+          <LoginPage />;
         </PublicRoute>
 
-        <PrivateRoute path="/" isLoggedIn={isLoggedIn}>
-          <MainBlock setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
+        <PrivateRoute path="/">
+          <MainBlock />
         </PrivateRoute>
       </Switch>
     </div>

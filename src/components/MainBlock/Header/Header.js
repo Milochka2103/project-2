@@ -3,16 +3,19 @@ import { useHistory } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import {LinkContainer} from "react-router-bootstrap";
 import './Header.css'
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../../store/slices/auth';
 
-export const Header = ({ setIsLoggedIn }) => {
-  const history = useHistory()
+export const Header = () => {
+  const history = useHistory();
 
-  const logOut = () => {
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
+  const dispatch = useDispatch();
+
+  const handleOut = () => {
+    dispatch(logOut());
+
     history.push('/login');
   }
 
@@ -26,11 +29,9 @@ export const Header = ({ setIsLoggedIn }) => {
             <Nav className="me-auto">
               <NavLink to="/predictions">Predictions</NavLink>
               <NavLink to="/favorite">Favorite</NavLink>
-              <NavLink to="/login" onClick={logOut}>
+              <NavLink to="/login" onClick={handleOut}>
                 Log out
               </NavLink>
-
-            
             </Nav>
           </Navbar.Collapse>
         </Container>
